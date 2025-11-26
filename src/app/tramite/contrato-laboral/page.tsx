@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { generatePdf } from '@/lib/generatePdf';
 
 type Modalidad = 'indefinido' | 'plazo-fijo';
 
@@ -176,8 +177,7 @@ RUT: ${formData.rutRepresentante}      RUT: ${formData.rutTrabajador}
             ¡Documento generado con éxito!
           </h1>
           <p className="text-gray-600 mb-8">
-            Tu contrato laboral está listo. En una aplicación real, aquí
-            podrías descargarlo en formato PDF o Word.
+            Tu contrato laboral está listo. Descarga el documento en formato PDF.
           </p>
           <div className="bg-gray-50 rounded-lg p-4 mb-8 text-left">
             <pre className="text-xs text-gray-700 whitespace-pre-wrap font-mono">
@@ -185,8 +185,19 @@ RUT: ${formData.rutRepresentante}      RUT: ${formData.rutTrabajador}
             </pre>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-              Descargar PDF (Demo)
+            <button
+              onClick={() =>
+                generatePdf({
+                  title: formData.modalidad === 'indefinido'
+                    ? 'CONTRATO DE TRABAJO (Indefinido)'
+                    : `CONTRATO DE TRABAJO (Plazo Fijo - ${formData.duracionMeses} meses)`,
+                  content: generatePreview(),
+                  fileName: `contrato-laboral-${formData.rutTrabajador || 'documento'}`,
+                })
+              }
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+            >
+              Descargar PDF
             </button>
             <Link
               href="/tramites"

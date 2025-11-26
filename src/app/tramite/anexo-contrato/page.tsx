@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { generatePdf } from '@/lib/generatePdf';
 
 type TipoCambio = 'sueldo' | 'funciones' | 'jornada' | 'lugar' | 'otras';
 
@@ -217,8 +218,7 @@ RUT: ${formData.rutRepresentante}      RUT: ${formData.rutTrabajador}
             ¡Documento generado con éxito!
           </h1>
           <p className="text-gray-600 mb-8">
-            Tu anexo de contrato está listo. En una aplicación real, aquí
-            podrías descargarlo en formato PDF o Word.
+            Tu anexo de contrato está listo. Descarga el documento en formato PDF.
           </p>
           <div className="bg-gray-50 rounded-lg p-4 mb-8 text-left">
             <pre className="text-xs text-gray-700 whitespace-pre-wrap font-mono">
@@ -226,8 +226,17 @@ RUT: ${formData.rutRepresentante}      RUT: ${formData.rutTrabajador}
             </pre>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-              Descargar PDF (Demo)
+            <button
+              onClick={() =>
+                generatePdf({
+                  title: 'ANEXO DE CONTRATO DE TRABAJO',
+                  content: generatePreview(),
+                  fileName: `anexo-contrato-${formData.rutTrabajador || 'documento'}`,
+                })
+              }
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+            >
+              Descargar PDF
             </button>
             <Link
               href="/tramites"
